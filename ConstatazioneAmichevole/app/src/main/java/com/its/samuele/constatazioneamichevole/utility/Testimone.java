@@ -1,7 +1,7 @@
 package com.its.samuele.constatazioneamichevole.utility;
 
 /**
- * Created by Utente on 27/09/2016.
+ * Created by Samuele.Pretto on 27/09/2016.
  */
 
 public class Testimone {
