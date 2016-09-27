@@ -24,6 +24,7 @@
         android:text="veicoli oltra a A o B"/>
 
     <RadioButton
+        android:id="@+id/radioVeicoli"
         android:layout_width="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
@@ -40,6 +41,7 @@
         android:text="oggetti diversi dai veicoli"/>
 
     <RadioButton
+        android:id="@+id/radioOggetti"
         android:layout_width="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
@@ -47,6 +49,7 @@
         android:layout_height="50dp" />
 
     <Button
+        android:id="@+id/btnModDanni"
         android:layout_width="wrap_content"
         android:textSize="25dp"
         android:layout_marginTop="50dp"

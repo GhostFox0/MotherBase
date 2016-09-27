@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true"
+    android:fillViewport="false"
+    android:id="@+id/wrapper">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,6 +30,7 @@
         android:text="cognome"/>
 
     <EditText
+        android:id="@+id/edtCognomeTestimone"
         android:layout_width="wrap_content"
         android:hint="Inserisci il tuo cognome"
         android:layout_gravity="center"
@@ -40,6 +47,7 @@
         android:text="nome"/>
 
     <EditText
+        android:id="@+id/edtNomeTestimone"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:hint="Inserisci il nome"
@@ -56,6 +64,7 @@
         android:text="indirizzo"/>
 
     <EditText
+        android:id="@+id/edtIndirizzoTestimone"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:hint="Inserisci indirizzo"
@@ -72,6 +81,7 @@
         android:text="telefono"/>
 
     <EditText
+        android:id="@+id/edtTelefonoTestimone"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:hint="Inserisci numero di telefono"
@@ -88,6 +98,7 @@
         android:text="presenza veicolo A o B"/>
 
     <EditText
+        android:id="@+id/edtLocazioneTestimone"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:hint="Inserisci locazione"
@@ -95,6 +106,7 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/btnModTest"
         android:layout_width="wrap_content"
         android:textSize="25dp"
         android:layout_marginTop="50dp"
@@ -103,3 +115,4 @@
         android:layout_height="wrap_content" />
 
 </LinearLayout>
+    </ScrollView>
