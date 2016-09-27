@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true"
+    android:background="#ffffff"
+    android:fillViewport="false"
+    android:id="@+id/wrapper">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="78dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:weightSum="1">
+
+    <TextView android:id="@+id/name1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="ai sensi del D.Lgs. 196/2003, sulla tutela delle persone e di altri soggetti rispetto al trattamento dei dati personali, il
+    trattamento delle informazioni che La riguardano,
+    sara' improntato ai principi di correttezza, liceita' e trasparenza e tutelando la Sua riservatezza e i Suoi diritti.
+
+    In particolare, i dati idonei a rivelare l'origine razziale ed etnica, le convinzioni religiose, filosofiche o di altro genere,
+    le opinioni politiche, l'adesione a partiti, sindacati,
+    associazioni od organizzazioni a carattere religioso, filosofico, politico o sindacale, nonche' i dati personali idonei a rivelare
+    lo stato di salute e la vita sessuale, possono essere oggetto di trattamento solo con il consenso scritto dell'interessato e previa
+    autorizzazione del Garante per la protezione dei dati personali (articolo 26).
+
+    Ai sensi dell'articolo 13 del predetto decreto, Le forniamo quindi le seguenti informazioni.
+
+    1. I dati sensibili da Lei forniti verranno trattati, nei limiti dell'Autorizzazione generale del Garante n.../200…, per le seguenti
+    finalita': .....................................................;
+
+    2. Il trattamento sara' effettuato con le seguenti modalita': .........................................;
+    (Indicare le modalità del trattamento: manuale / informatizzato / altro)
+
+    3. Il conferimento dei dati e' facoltativo/obbligatorio (se obbligatorio specificare il motivo dell'obbligo) e l'eventuale rifiuto
+    a fornire tali dati non ha alcuna conseguenza / potrebbe
+    comportare la mancata o parziale esecuzione del contratto / la mancata prosecuzione del rapporto.
+    4. I dati non saranno comunicati ad altri soggetti né saranno oggetto di diffusione o
+    i dati potranno essere / saranno comunicati a: ............................... o diffusi presso................................;
+    (Scegliere l'opzione a seconda delle caratteristiche del trattamento e indicare, se presente, l'ambito di comunicazione e/o
+    diffusione, fermo restando il divieto relativo ai dati idonei
+    a rivelare lo stato di salute, di cui all'art. 26, comma 5 del D.lgs.196/2003).
+
+    5. Il titolare del trattamento è: ................................................................................................;
+    (Indicare la denominazione o la ragione sociale e il domicilio, la residenza o la sede del titolare)
+
+    6. Il responsabile del trattamento è .............................................................;
+    (indicare almeno un responsabile, e, se vi è un responsabile designato ai fini di cui all'articolo 7 del D.Lgs. 196/2003, indicare
+    quel soggetto; indicare, inoltre, il sito della rete" />
+
+</LinearLayout>
+</RelativeLayout>
+    </ScrollView>
