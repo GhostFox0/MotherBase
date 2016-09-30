@@ -53,7 +53,7 @@ public class PhotoFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                takePhoto(v);
             }
         });
 
