@@ -16,7 +16,6 @@
     <ImageView
         android:layout_above="@+id/fab"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
         android:id="@+id/photoVisual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
