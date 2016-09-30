@@ -37,5 +37,5 @@ public class DettaglioSinistroTableHelper implements BaseColumns {
             +LUOGO_INCIDENTE+" TEXT, "
             +FERITI+" INTEGER, "
             +ALTRI_VEICOLI+" INTEGER, "
-            +ALTRI_OGGETTI+" INTEGER, FOREIGN KEY (id) references sinistri("+_ID+"));";
+            +ALTRI_OGGETTI+" INTEGER, FOREIGN KEY (id) references sinistri("+ID+"));";
 }

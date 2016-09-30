@@ -1,10 +1,12 @@
 package com.its.samuele.constatazioneamichevole.activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +22,7 @@ import com.its.samuele.constatazioneamichevole.database.SinistroTableHelper;
 public class MainActivity extends AppCompatActivity {
 
     ListView listSinistri;
-    Button aggiungiSinistro;
+    FloatingActionButton aggiungiSinistro;
     Bundle bundle;
 
     @Override
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.lista_contestazioni);
 
         listSinistri = (ListView) findViewById(R.id.listaSinistri);
-        aggiungiSinistro = (Button) findViewById(R.id.fab);
+        aggiungiSinistro = (FloatingActionButton) findViewById(R.id.fab);
 
         SQLiteDatabase database = new SinistroDB(MainActivity.this).getReadableDatabase();
         Cursor cursor = database.query(SinistroTableHelper.TABLE_NAME,
@@ -48,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         database.close();
+
+        aggiungiSinistro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent vIntent = new Intent (MainActivity.this,NuovaConstatazione.class);
+                startActivity(vIntent);
+            }
+        });
 
 
     }

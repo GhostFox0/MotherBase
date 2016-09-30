@@ -12,6 +12,6 @@ public class SinistroTableHelper implements BaseColumns {
     public static final String DATA_INSERT = "date_insert";
     public static final String TIME = "time";
 
-    public static final String CREATE = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME+" ( "+_ID + "INTEGER PRIMARY KEY, "+DATA_INSERT+" DATE, "+TIME+" TEXT);";
+    public static final String CREATE = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME+" ( "+_ID + " INTEGER PRIMARY KEY, "+DATA_INSERT+" DATE, "+TIME+" TEXT);";
 
 }
