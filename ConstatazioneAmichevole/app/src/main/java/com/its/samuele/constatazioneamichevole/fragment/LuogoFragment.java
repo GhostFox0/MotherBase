@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.its.samuele.constatazioneamichevole.R;
@@ -34,7 +35,10 @@ import java.util.ArrayList;
 
 public class LuogoFragment extends Fragment {
 
-    EditText edtPaese, edtVia;
+    AutoCompleteTextView edtPaese, edtVia;
+    ArrayList<Regione> regioniList;
+    ArrayList<Provincia> provinciaList;
+    ArrayList<Comune> comuniList;
 
     public interface ILuogo{
         public void changeLuogo();
@@ -47,8 +51,21 @@ public class LuogoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.luogo_fragment, container,false);
 
-        edtPaese = (EditText) view.findViewById(R.id.editTextPaese);
-        edtVia = (EditText) view.findViewById(R.id.editTextVia);
+        String x =leggiDocumentoRegioniProvinceComuni();
+        try {
+            ottieniRegioni(x);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Regione regioni[] = regioniList.toArray(new Regione[regioniList.size()]);
+        Provincia province[] = provinciaList.toArray(new Provincia[provinciaList.size()]);
+        Comune comuni[] = comuniList.toArray(new Comune[comuniList.size()]);
+        String [] nomeComuni;
+
+
+        edtPaese = (AutoCompleteTextView) view.findViewById(R.id.editTextPaese);
+        edtVia = (AutoCompleteTextView) view.findViewById(R.id.editTextVia);
 
 
 
@@ -66,7 +83,7 @@ public class LuogoFragment extends Fragment {
         }
     }
 
-    private void leggiDocumentoRegioniProvinceComuni() {
+    private String leggiDocumentoRegioniProvinceComuni() {
 
         InputStream is = getResources().openRawResource(R.raw.italia_comuni);
         Writer writer = new StringWriter();
@@ -89,20 +106,21 @@ public class LuogoFragment extends Fragment {
             }
         }
         String jsonStringTotale = writer.toString();
+        return jsonStringTotale;
     }
 
     private void ottieniRegioni(String jsonString) throws JSONException {
         JSONObject temp = new JSONObject(jsonString);
         JSONArray jsTempRegioni = temp.getJSONArray("regioni");
         Regione regione;
-        ArrayList<Regione> regioniList =new ArrayList<Regione>();
+        regioniList =new ArrayList<Regione>();
         for (int a = 0; a < jsTempRegioni.length(); a++) {
             JSONObject regTemp = jsTempRegioni.getJSONObject(a);
             regione = new Regione();
             regione.setNomeRegione(regTemp.getString("nome"));
             JSONArray provTempArr = regTemp.getJSONArray("province");
             Provincia provincia;
-            ArrayList<Provincia> listaProvince = new ArrayList<>();
+            provinciaList = new ArrayList<>();
             for (int b = 0; b < provTempArr.length(); b++) {
                 JSONObject provTemp = provTempArr.getJSONObject(b);
                 provincia = new Provincia();
@@ -110,21 +128,21 @@ public class LuogoFragment extends Fragment {
                 provincia.setNomeProvincia(provTemp.getString("nome"));
                 JSONArray comTempArr = provTemp.getJSONArray("comuni");
                 Comune comune;
-                ArrayList<Comune> listaComuni = new ArrayList();
+                comuniList = new ArrayList();
                 for (int c = 0; c < comTempArr.length(); c++) {
                     JSONObject comTemp = comTempArr.getJSONObject(c);
                     comune = new Comune();
                     comune.setCap(comTemp.getString("cap"));
                     comune.setCodeComune(comTemp.getString("code"));
                     comune.setNomeComune(comTemp.getString("nome"));
-                    listaComuni.add(comune);
+                    comuniList.add(comune);
                     if (c == comTempArr.length() - 1) {
-                        provincia.setComuniArrayList(listaComuni);
+                        provincia.setComuniArrayList(comuniList);
                     }
                 }
-                listaProvince.add(provincia);
+                provinciaList.add(provincia);
                 if (b == provTempArr.length() - 1) {
-                    regione.setProvinceArrayList(listaProvince);
+                    regione.setProvinceArrayList(provinciaList);
                 }
             }
             regioniList.add(regione);
