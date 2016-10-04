@@ -14,8 +14,7 @@
         android:textSize="30sp"
         android:textAlignment="center" />
     <ImageView
-        android:layout_above="@+id/fab"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:id="@+id/photoVisual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
