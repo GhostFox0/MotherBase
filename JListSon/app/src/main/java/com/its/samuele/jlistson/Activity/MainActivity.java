@@ -1,9 +1,12 @@
 package com.its.samuele.jlistson.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog mProgressDialog;
     ListView mListView;
     ArrayList<HashMap<String, String>> listPeople;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,21 @@ public class MainActivity extends AppCompatActivity {
         listPeople = new ArrayList<>();
 
         new GetJSON().execute();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                bundle = new Bundle();
+                HashMap<String, String> person;
+                person = listPeople.get(position);
+                bundle.putString("SURNAME",person.get("surname"));
+                bundle.putString("ID",person.get("id"));
+                bundle.putString("NAME",person.get("name"));
+                Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
 
 
