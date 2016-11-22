@@ -66,11 +66,19 @@ public class AdAdapter extends BaseAdapter {
         viewHolder.mCategory.setText(Integer.toString(ad.getCategorie_id()));
         viewHolder.mDate.setText(ad.getDate());
         viewHolder.mPlace.setText(ad.getComune()+" ("+ad.getProvincia()+")");
-        Picasso.with(mContext)
-                .load(ad.getImage())
-                .placeholder(R.drawable.ic_action_image)
-                .error(R.drawable.ic_action_image)
-                .into(viewHolder.mImage);
+        if (ad.getImage().isEmpty()||ad.getImage()==null){
+            Picasso.with(mContext)
+                    .load(R.drawable.ic_action_image)
+                    .into(viewHolder.mImage);
+        }
+        else{
+            Picasso.with(mContext)
+                    .load(ad.getImage())
+                    .placeholder(R.drawable.ic_action_image)
+                    .error(R.drawable.ic_action_image)
+                    .into(viewHolder.mImage);
+        }
+
         return convertView;
     }
 
