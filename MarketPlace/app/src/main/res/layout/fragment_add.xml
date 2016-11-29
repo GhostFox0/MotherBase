@@ -62,9 +62,9 @@
         <ImageButton
             android:layout_width="100dp"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/ic_action_image"
+            app:srcCompat="@drawable/splash_screen"
             android:id="@+id/imageButtonImage"
-            android:background="@android:color/transparent"
+            android:background="@android:color/background_dark"
             android:backgroundTint="@android:color/background_light" />
 
     </LinearLayout>
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/editTextTitle"
             android:layout_weight="1"
             android:hint="Titolo"
             android:textAlignment="center"
@@ -240,6 +240,17 @@
                 android:id="@+id/editTextComune"
                 android:hint="Scrivi qui lil comune"
                 android:textAlignment="center" />
+
+            <Button
+                android:text="Aggiungi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonAdd"
+                android:paddingTop="10dp"
+                android:background="@android:color/holo_orange_dark"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="normal|bold" />
         </LinearLayout>
     </LinearLayout>
     </LinearLayout>
