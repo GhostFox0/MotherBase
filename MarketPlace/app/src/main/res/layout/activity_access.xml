@@ -58,4 +58,28 @@
         android:layout_below="@+id/editTextLogEmail"
         android:layout_alignStart="@+id/editTextLogEmail"
         android:hint="Inserisci password" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/loginButtonFacebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonAccedi"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonAccedi"
+        android:layout_alignStart="@+id/imageView2" />
+
+    <Button
+        android:text="Accedi Social"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/loginButtonFacebook"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/buttonSocial" />
+
 </RelativeLayout>

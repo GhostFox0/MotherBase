@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "481394722903",
+    "project_id": "firebase-market-place"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481394722903:android:e5b762982d7de2ad",
+        "android_client_info": {
+          "package_name": "com.its.pretto.samuele.marketplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481394722903-b5tk404r0f3ph4ot5eanhr57vak7ei16.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.its.pretto.samuele.marketplace",
+            "certificate_hash": "3AA87914ECDA008DDE867D9C7EAED58D18706112"
+          }
+        },
+        {
+          "client_id": "481394722903-i0afbtpqi37vus75lu4mlitied1rad9c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJplhVzZ1N_GpqyatclcxUdbO1gSot4CU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

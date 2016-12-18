@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 cipherAES = Cipher.getInstance("AES");
                 cipherAES.init(Cipher.ENCRYPT_MODE,symmetricKey);
                 cipherRSA = Cipher.getInstance("RSA");
-                cipherRSA.init(Cipher.ENCRYPT_MODE,privateKey);
+                cipherRSA.init(Cipher.ENCRYPT_MODE,publicKey);
                 decipherRSA =Cipher.getInstance("RSA");
                 decipherRSA.init(Cipher.DECRYPT_MODE,privateKey);
                 decipherAES = Cipher.getInstance("AES");
