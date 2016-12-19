@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,15 +47,11 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements RegisterFragment.IRegisterFragment, LoginFragment.ILoginFragment {
 
     Button btnBeginLog, btnBeginReg;
-    Cipher cipherAES, cipherRSA, decipherAES, decipherRSA;
-    KeyGenerator generator;
-    SecretKey symmetricKey;
-    KeyPairGenerator kpg;
-    KeyPair kp;
-    PublicKey publicKey;
+    Cipher decipherAES, decipherRSA;
     PrivateKey privateKey;
     RegisterFragment registerFragment;
     LoginFragment loginFragment;
+    CipherClass cipherClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,58 +59,11 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState==null){
-
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if(!preferences.getBoolean("firstTime",false)){
-                try {
-                    generator = KeyGenerator.getInstance("AES");
-
-                    generator.init(128);
-                    symmetricKey = generator.generateKey();
-                    kpg = KeyPairGenerator.getInstance("RSA");
-
-                    kpg.initialize(1024);
-                    kp = kpg.genKeyPair();
-                    publicKey = kp.getPublic();
-                    privateKey = kp.getPrivate();
-
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("symmetricKey",Base64.encodeToString(symmetricKey.getEncoded(),Base64.DEFAULT));
-
-                    editor.putString("privateKey",Base64.encodeToString(privateKey.getEncoded(),Base64.DEFAULT));
-                    editor.putString("publicKey",Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT));
-                    editor.commit();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-
+            try {
+                cipherClass = CipherClass.getInstance();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
             }
-            else{
-
-                try {
-                    symmetricKey = new SecretKeySpec(preferences.getString("symmetricKey",null).getBytes("UTF-8"),"AES");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(preferences.getString("publicKey",null).getBytes("UTF-8")));
-                    privateKey = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(preferences.getString("privateKey",null).getBytes("UTF-8")));
-                } catch (InvalidKeySpecException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("firstTime", true);
-                editor.commit();
-
-
 
             registerFragment = new RegisterFragment();
             getFragmentManager().beginTransaction().add(R.id.container,registerFragment).commit();
@@ -157,19 +107,8 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         protected String doInBackground(Utente... utentes) {
             Utente utente = utentes[0];
             Utente decryptoUtente = new Utente();
-            String email ="";
-            String password ="";
-
-
-                /*decipherRSA =Cipher.getInstance("RSA");
-                decipherRSA.init(Cipher.DECRYPT_MODE,privateKey);
-                byte[] encodeKey = decipherRSA.doFinal(Base64.decode(symmetricKey.getEncoded(),Base64.DEFAULT));
-                SecretKey decryptC_simmetrica = new SecretKeySpec(encodeKey,"AES");
-
-                cipherAES = Cipher.getInstance("AES");
-                cipherAES.init(Cipher.ENCRYPT_MODE,decryptC_simmetrica);*/
-                email =utente.getMail();
-                password = utente.getPass();
+            String email =utente.getMail();
+            String password = utente.getPass();
 
 
             OkHttpClient client = new OkHttpClient();
@@ -191,15 +130,16 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 String cryptNome = jsonObject.getJSONObject("user").getString("nome");
                 String cryptCognome = jsonObject.getJSONObject("user").getString("cognome");
                 String cryptIndirizzo = jsonObject.getJSONObject("user").getString("indirizzo");
-                decipherRSA =Cipher.getInstance("RSA");
-                decipherRSA.init(Cipher.DECRYPT_MODE,privateKey);
-                byte[] encodeKey = decipherRSA.doFinal(Base64.decode(cryptC_simmetrica.getBytes("UTF-8"),Base64.DEFAULT));
-                SecretKey decryptC_simmetrica = new SecretKeySpec(encodeKey,"AES");
-                decipherAES = Cipher.getInstance("AES");
-                decipherAES.init(Cipher.DECRYPT_MODE,decryptC_simmetrica);
-                decryptoUtente = new Utente(email,password,new String(decipherAES.doFinal(Base64.decode(cryptNome.getBytes(),Base64.DEFAULT))),
-                        new String(decipherAES.doFinal(Base64.decode(cryptCognome.getBytes(),Base64.DEFAULT))),
-                        new String(decipherAES.doFinal(Base64.decode(cryptIndirizzo.getBytes(),Base64.DEFAULT))));
+
+                SecretKey databaseSymKey = new SecretKeySpec(Base64.decode(cipherClass.decrypt(cryptC_simmetrica,"RSA","private"),Base64.NO_WRAP),"AES");
+
+                //Controllo se la chiave simmetrica del database è uguale a quella della classe
+                if (databaseSymKey.equals(cipherClass.getSymmetricKey())){
+                    Log.d("aaa","Sono uguali");
+                }
+                decryptoUtente = new Utente(email,password,cipherClass.decrypt(cryptNome,"AES","symmetric"),
+                        cipherClass.decrypt(cryptCognome,"AES","symmetric"),
+                        cipherClass.decrypt(cryptIndirizzo,"AES","symmetric"));
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -233,30 +173,29 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         protected String doInBackground(Utente... utentes) {
             Utente utente = utentes[0];
             Utente criptoUtente = new Utente();
+
             try {
-                cipherAES = Cipher.getInstance("AES");
-                cipherAES.init(Cipher.ENCRYPT_MODE,symmetricKey);
-                criptoUtente.setName(Base64.encodeToString(cipherAES.doFinal(utente.getName().getBytes("UTF-8")),Base64.DEFAULT));
-                criptoUtente.setSurn(Base64.encodeToString(cipherAES.doFinal(utente.getSurn().getBytes("UTF-8")),Base64.DEFAULT));
+                criptoUtente.setName(cipherClass.encrypt(utente.getName(),"AES","symmetric"));
+                criptoUtente.setSurn(cipherClass.encrypt(utente.getSurn(),"AES","symmetric"));
+                criptoUtente.setMail(cipherClass.encrypt(utente.getMail(),"AES","symmetric"));
                 criptoUtente.setMail(utente.getMail());
                 criptoUtente.setPass(utente.getPass());
-                criptoUtente.setAddress(Base64.encodeToString(cipherAES.doFinal(utente.getAddress().getBytes("UTF-8")),Base64.DEFAULT));
-                criptoUtente.setC_pubblica(Base64.encodeToString(cipherAES.doFinal(publicKey.toString().getBytes("UTF-8")),Base64.DEFAULT));
-                cipherRSA = Cipher.getInstance("RSA");
-                cipherRSA.init(Cipher.ENCRYPT_MODE,publicKey);
-                criptoUtente.setC_simmetrica(Base64.encodeToString(cipherRSA.doFinal(symmetricKey.toString().getBytes("UTF-8")),Base64.DEFAULT));
+                criptoUtente.setAddress(cipherClass.encrypt(utente.getAddress(),"AES","symmetric"));
+                criptoUtente.setC_pubblica(cipherClass.encrypt(Base64.encodeToString(cipherClass.getPublicKey().getEncoded(),Base64.NO_WRAP),"AES","symmetric"));
+                criptoUtente.setC_simmetrica(cipherClass.encrypt(Base64.encodeToString(new SecretKeySpec(cipherClass.getSymmetricKey().getEncoded(),"AES").getEncoded(),Base64.NO_WRAP),"RSA","public"));
 
-            }  catch (BadPaddingException e) {
+
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IllegalBlockSizeException e) {
-                e.printStackTrace();
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
                 e.printStackTrace();
             }
 
