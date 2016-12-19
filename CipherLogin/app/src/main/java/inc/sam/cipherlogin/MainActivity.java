@@ -90,11 +90,15 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
             }
             else{
 
-                    symmetricKey = new SecretKeySpec(preferences.getString("symmetricKey",null).getBytes(),"AES");
+                try {
+                    symmetricKey = new SecretKeySpec(preferences.getString("symmetricKey",null).getBytes("UTF-8"),"AES");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
                 try {
-                    publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(preferences.getString("publicKey",null).getBytes("utf-8")));
-                    privateKey = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(preferences.getString("privateKey",null).getBytes("utf-8")));
+                    publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(preferences.getString("publicKey",null).getBytes("UTF-8")));
+                    privateKey = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(preferences.getString("privateKey",null).getBytes("UTF-8")));
                 } catch (InvalidKeySpecException e) {
                     e.printStackTrace();
                 } catch (NoSuchAlgorithmException e) {
@@ -104,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 }
             }
 
+
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean("firstTime", true);
                 editor.commit();
@@ -112,23 +117,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
             registerFragment = new RegisterFragment();
             getFragmentManager().beginTransaction().add(R.id.container,registerFragment).commit();
-            try {
 
-                cipherAES = Cipher.getInstance("AES");
-                cipherAES.init(Cipher.ENCRYPT_MODE,symmetricKey);
-                cipherRSA = Cipher.getInstance("RSA");
-                cipherRSA.init(Cipher.ENCRYPT_MODE,publicKey);
-                decipherRSA =Cipher.getInstance("RSA");
-                decipherRSA.init(Cipher.DECRYPT_MODE,privateKey);
-                decipherAES = Cipher.getInstance("AES");
-
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            }
         }
 
         btnBeginLog = (Button) findViewById(R.id.buttonLoginFrag);
@@ -171,18 +160,18 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
             String email ="";
             String password ="";
 
-            try {
 
-                email =Base64.encodeToString(cipherAES.doFinal(utente.getMail().getBytes("UTF-8")),Base64.DEFAULT);
-                password = Base64.encodeToString(cipherAES.doFinal(utente.getPass().getBytes("UTF-8")),Base64.DEFAULT);
+                /*decipherRSA =Cipher.getInstance("RSA");
+                decipherRSA.init(Cipher.DECRYPT_MODE,privateKey);
+                byte[] encodeKey = decipherRSA.doFinal(Base64.decode(symmetricKey.getEncoded(),Base64.DEFAULT));
+                SecretKey decryptC_simmetrica = new SecretKeySpec(encodeKey,"AES");
 
-            } catch (BadPaddingException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IllegalBlockSizeException e) {
-                e.printStackTrace();
-            }
+                cipherAES = Cipher.getInstance("AES");
+                cipherAES.init(Cipher.ENCRYPT_MODE,decryptC_simmetrica);*/
+                email =utente.getMail();
+                password = utente.getPass();
+
+
             OkHttpClient client = new OkHttpClient();
 
             RequestBody formBody = new FormBody.Builder()
@@ -202,8 +191,11 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 String cryptNome = jsonObject.getJSONObject("user").getString("nome");
                 String cryptCognome = jsonObject.getJSONObject("user").getString("cognome");
                 String cryptIndirizzo = jsonObject.getJSONObject("user").getString("indirizzo");
-                byte[] encodeKey = decipherRSA.doFinal(Base64.decode(cryptC_simmetrica.getBytes(),Base64.DEFAULT));
-                SecretKey decryptC_simmetrica = new SecretKeySpec(encodeKey,0,encodeKey.length,"AES");
+                decipherRSA =Cipher.getInstance("RSA");
+                decipherRSA.init(Cipher.DECRYPT_MODE,privateKey);
+                byte[] encodeKey = decipherRSA.doFinal(Base64.decode(cryptC_simmetrica.getBytes("UTF-8"),Base64.DEFAULT));
+                SecretKey decryptC_simmetrica = new SecretKeySpec(encodeKey,"AES");
+                decipherAES = Cipher.getInstance("AES");
                 decipherAES.init(Cipher.DECRYPT_MODE,decryptC_simmetrica);
                 decryptoUtente = new Utente(email,password,new String(decipherAES.doFinal(Base64.decode(cryptNome.getBytes(),Base64.DEFAULT))),
                         new String(decipherAES.doFinal(Base64.decode(cryptCognome.getBytes(),Base64.DEFAULT))),
@@ -217,6 +209,10 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
             } catch (IllegalBlockSizeException e) {
                 e.printStackTrace();
             } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
                 e.printStackTrace();
             }
 
@@ -238,12 +234,16 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
             Utente utente = utentes[0];
             Utente criptoUtente = new Utente();
             try {
+                cipherAES = Cipher.getInstance("AES");
+                cipherAES.init(Cipher.ENCRYPT_MODE,symmetricKey);
                 criptoUtente.setName(Base64.encodeToString(cipherAES.doFinal(utente.getName().getBytes("UTF-8")),Base64.DEFAULT));
                 criptoUtente.setSurn(Base64.encodeToString(cipherAES.doFinal(utente.getSurn().getBytes("UTF-8")),Base64.DEFAULT));
-                criptoUtente.setMail(Base64.encodeToString(cipherAES.doFinal(utente.getMail().getBytes("UTF-8")),Base64.DEFAULT));
-                criptoUtente.setPass(Base64.encodeToString(cipherAES.doFinal(utente.getPass().getBytes("UTF-8")),Base64.DEFAULT));
+                criptoUtente.setMail(utente.getMail());
+                criptoUtente.setPass(utente.getPass());
                 criptoUtente.setAddress(Base64.encodeToString(cipherAES.doFinal(utente.getAddress().getBytes("UTF-8")),Base64.DEFAULT));
                 criptoUtente.setC_pubblica(Base64.encodeToString(cipherAES.doFinal(publicKey.toString().getBytes("UTF-8")),Base64.DEFAULT));
+                cipherRSA = Cipher.getInstance("RSA");
+                cipherRSA.init(Cipher.ENCRYPT_MODE,publicKey);
                 criptoUtente.setC_simmetrica(Base64.encodeToString(cipherRSA.doFinal(symmetricKey.toString().getBytes("UTF-8")),Base64.DEFAULT));
 
             }  catch (BadPaddingException e) {
@@ -251,6 +251,12 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
                 e.printStackTrace();
             }
 
