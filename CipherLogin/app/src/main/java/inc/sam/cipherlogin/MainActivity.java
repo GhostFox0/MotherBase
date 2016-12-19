@@ -19,11 +19,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -58,17 +62,58 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState==null){
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if(!preferences.getBoolean("firstTime",false)){
+                try {
+                    generator = KeyGenerator.getInstance("AES");
+
+                    generator.init(128);
+                    symmetricKey = generator.generateKey();
+                    kpg = KeyPairGenerator.getInstance("RSA");
+
+                    kpg.initialize(1024);
+                    kp = kpg.genKeyPair();
+                    publicKey = kp.getPublic();
+                    privateKey = kp.getPrivate();
+
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("symmetricKey",Base64.encodeToString(symmetricKey.getEncoded(),Base64.DEFAULT));
+
+                    editor.putString("privateKey",Base64.encodeToString(privateKey.getEncoded(),Base64.DEFAULT));
+                    editor.putString("publicKey",Base64.encodeToString(publicKey.getEncoded(),Base64.DEFAULT));
+                    editor.commit();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else{
+
+                    symmetricKey = new SecretKeySpec(preferences.getString("symmetricKey",null).getBytes(),"AES");
+
+                try {
+                    publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(preferences.getString("publicKey",null).getBytes("utf-8")));
+                    privateKey = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(preferences.getString("privateKey",null).getBytes("utf-8")));
+                } catch (InvalidKeySpecException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("firstTime", true);
+                editor.commit();
+
+
+
             registerFragment = new RegisterFragment();
             getFragmentManager().beginTransaction().add(R.id.container,registerFragment).commit();
             try {
-                generator = KeyGenerator.getInstance("AES");
-                generator.init(128);
-                symmetricKey = generator.generateKey();
-                kpg = KeyPairGenerator.getInstance("RSA");
-                kpg.initialize(1024);
-                kp = kpg.genKeyPair();
-                publicKey = kp.getPublic();
-                privateKey = kp.getPrivate();
+
                 cipherAES = Cipher.getInstance("AES");
                 cipherAES.init(Cipher.ENCRYPT_MODE,symmetricKey);
                 cipherRSA = Cipher.getInstance("RSA");
@@ -159,10 +204,10 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 String cryptIndirizzo = jsonObject.getJSONObject("user").getString("indirizzo");
                 byte[] encodeKey = decipherRSA.doFinal(Base64.decode(cryptC_simmetrica.getBytes(),Base64.DEFAULT));
                 SecretKey decryptC_simmetrica = new SecretKeySpec(encodeKey,0,encodeKey.length,"AES");
-                decipherRSA.init(Cipher.DECRYPT_MODE,decryptC_simmetrica);
-                decryptoUtente = new Utente(email,password,new String(decipherRSA.doFinal(Base64.decode(cryptNome.getBytes(),Base64.DEFAULT))),
-                        new String(decipherRSA.doFinal(Base64.decode(cryptCognome.getBytes(),Base64.DEFAULT))),
-                        new String(decipherRSA.doFinal(Base64.decode(cryptIndirizzo.getBytes(),Base64.DEFAULT))));
+                decipherAES.init(Cipher.DECRYPT_MODE,decryptC_simmetrica);
+                decryptoUtente = new Utente(email,password,new String(decipherAES.doFinal(Base64.decode(cryptNome.getBytes(),Base64.DEFAULT))),
+                        new String(decipherAES.doFinal(Base64.decode(cryptCognome.getBytes(),Base64.DEFAULT))),
+                        new String(decipherAES.doFinal(Base64.decode(cryptIndirizzo.getBytes(),Base64.DEFAULT))));
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
