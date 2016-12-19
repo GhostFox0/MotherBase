@@ -47,8 +47,6 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements RegisterFragment.IRegisterFragment, LoginFragment.ILoginFragment {
 
     Button btnBeginLog, btnBeginReg;
-    Cipher decipherAES, decipherRSA;
-    PrivateKey privateKey;
     RegisterFragment registerFragment;
     LoginFragment loginFragment;
     CipherClass cipherClass;
