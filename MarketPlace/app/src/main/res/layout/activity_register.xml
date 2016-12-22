@@ -53,9 +53,46 @@
         android:id="@+id/editTextRegPassword"
         android:singleLine="true"
         android:background="@android:color/background_light"
-        android:layout_marginTop="74dp"
+        android:layout_marginTop="21dp"
         android:hint="Inserisci password"
         android:layout_below="@+id/editTextRegEmail"
         android:layout_alignStart="@+id/editTextRegEmail" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="25dp"
+        android:id="@+id/editTextName"
+        android:layout_below="@+id/editTextRegPassword"
+        android:layout_alignStart="@+id/editTextRegPassword"
+        android:singleLine="true"
+        android:hint="Inserisci nome"
+        android:background="@android:color/background_light" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="14dp"
+        android:id="@+id/editTextSurname"
+        android:layout_below="@+id/editTextName"
+        android:layout_alignStart="@+id/editTextName"
+        android:hint="Inserisci cognome"
+        android:background="@android:color/background_light" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/editTextSurname"
+        android:layout_alignEnd="@+id/editTextSurname"
+        android:layout_marginTop="17dp"
+        android:id="@+id/editTextAddress"
+        android:hint="Inserisci indirizzo"
+        android:background="@android:color/background_light" />
 
 </RelativeLayout>

@@ -9,5 +9,10 @@
         android:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"></item>
 
+    <item
+        android:id="@+id/action_user"
+        android:icon="@drawable/ic_action_user"
+        app:showAsAction="always"
+        android:title="User"></item>
 
 </menu>

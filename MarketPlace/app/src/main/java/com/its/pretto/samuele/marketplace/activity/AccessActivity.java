@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,11 +30,23 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.its.pretto.samuele.marketplace.R;
 import com.its.pretto.samuele.marketplace.fragment.FragmentDialogSocial;
+import com.its.pretto.samuele.marketplace.support.CipherClass;
+import com.its.pretto.samuele.marketplace.support.Utente;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -49,11 +62,25 @@ public class AccessActivity extends AppCompatActivity implements GoogleApiClient
     LoginButton mLogin;
     CallbackManager callbackManager;
     GoogleApiClient mGoogleApiClient;
+    CipherClass cipherClass;
     private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState==null){
+            try {
+                cipherClass =CipherClass.getInstance(getApplicationContext());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            }
+        }
+
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_access);
 
@@ -115,7 +142,7 @@ public class AccessActivity extends AppCompatActivity implements GoogleApiClient
             public void onClick(View view) {
                 if (edtEmail.length()>0&&edtPass.length()>0){
                     LogAsychTask logAsychTask = new LogAsychTask();
-                    logAsychTask.execute(new String[]{edtEmail.getText().toString(),edtPass.getText().toString()});
+                    logAsychTask.execute(new Utente(edtEmail.getText().toString(),edtPass.getText().toString(),null,null,null));
                 }
                 else {
                     Toast.makeText(AccessActivity.this, "Errore", Toast.LENGTH_SHORT).show();
@@ -125,22 +152,24 @@ public class AccessActivity extends AppCompatActivity implements GoogleApiClient
 
     }
 
-    class LogAsychTask extends AsyncTask<String[], Void, Boolean>{
-        String mMail, mPass, result,error;
-        Boolean test=false;
-        int id;
+    class LogAsychTask extends AsyncTask<Utente, Void, String>{
+        JSONObject jsonObject;
+        String result;
 
         @Override
-        protected Boolean doInBackground(String[]... strings) {
-            String[] credentials = strings[0];
-            mMail = credentials[0];
-            mPass = credentials[1];
+        protected String doInBackground(Utente... utentes) {
+
+            Utente utente = utentes[0];
+            Utente decryptoUtente = new Utente();
+            String email =utente.getMail();
+            String password = utente.getPass();
+
 
             OkHttpClient client = new OkHttpClient();
 
             RequestBody formBody = new FormBody.Builder()
-                    .add("mail",mMail)
-                    .add("password",mPass)
+                    .add("mail",email)
+                    .add("password",password)
                     .build();
             Request request = new Request.Builder()
                     .url("http://tommo.altervista.org/ITS/annunci/login.php")
@@ -150,36 +179,58 @@ public class AccessActivity extends AppCompatActivity implements GoogleApiClient
             try {
                 Response response = client.newCall(request).execute();
                 result = response.body().string();
-                JSONObject jsonObject = new JSONObject(result.toString());
-                test= jsonObject.getBoolean("success");
-                if (test){
-                    id = Integer.parseInt(jsonObject.getString("id"));
+                jsonObject = new JSONObject(result);
+                String cryptC_simmetrica = jsonObject.getJSONObject("user").getString("c_simmetrica");
+                String cryptNome = jsonObject.getJSONObject("user").getString("nome");
+                String cryptCognome = jsonObject.getJSONObject("user").getString("cognome");
+                String cryptIndirizzo = jsonObject.getJSONObject("user").getString("indirizzo");
+                SecretKey databaseSymKey = new SecretKeySpec(Base64.decode(cipherClass.decrypt(cryptC_simmetrica,"RSA","private"),Base64.NO_WRAP),"AES");
+
+                //Controllo se la chiave simmetrica del database è uguale a quella della classe
+                if (databaseSymKey.equals(cipherClass.getSymmetricKey())){
+                    Log.d("aaa","Sono uguali");
+                    cipherClass.setSymmetricKey(databaseSymKey);
                 }
-                else{
-                    error = jsonObject.getString("success");
-                }
+                decryptoUtente = new Utente(email,password,cipherClass.decrypt(cryptNome,"AES","symmetric"),
+                        cipherClass.decrypt(cryptCognome,"AES","symmetric"),
+                        cipherClass.decrypt(cryptIndirizzo,"AES","symmetric"));
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
             }
-            return test;
+
+            return decryptoUtente.toString();
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean){
-                Intent intent = new Intent(AccessActivity.this,MainActivity.class);
-                startActivity(intent);
-                dialog.dismiss();
-                finish();
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.d("aaa",s);
+            try {
+                if (jsonObject.getBoolean("success")){
+                    startActivity(new Intent(AccessActivity.this,MainActivity.class));
+                }
+                else {
+                    Toast.makeText(AccessActivity.this, "Login fallito", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            else{
-                Toast.makeText(AccessActivity.this, "Error:" + error, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
+            dialog.dismiss();
         }
+
 
         @Override
         protected void onPreExecute() {
