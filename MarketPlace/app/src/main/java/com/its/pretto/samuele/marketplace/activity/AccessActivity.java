@@ -51,7 +51,6 @@ public class AccessActivity extends AppCompatActivity implements GoogleApiClient
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

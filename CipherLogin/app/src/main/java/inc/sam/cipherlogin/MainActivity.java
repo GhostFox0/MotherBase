@@ -58,8 +58,12 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
         if (savedInstanceState==null){
             try {
-                cipherClass = CipherClass.getInstance();
+                cipherClass = CipherClass.getInstance(getApplicationContext());
             } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
 
