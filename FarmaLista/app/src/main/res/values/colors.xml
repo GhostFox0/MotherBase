@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="tealPrimary">#009688</color>
+    <color name="tealDark">#004d40</color>
+    <color name="accent">#D50000</color>
+    <color name="colorBackgroundLight">#fafafa</color>
+    <color name="colorBackgroundDark">#009688</color>
+    <color name="colorBackgroundFloatingLight">#ffffff</color>
+    <color name="colorBackgroundFloatingDark">#00695c</color>
+    <color name="teal">#009688</color>
+
+</resources>

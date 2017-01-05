@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nome Cognome Placeholder"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/teal"
+                    android:layout_marginTop="25dp"
+                    android:id="@+id/textViewProfNameSurn" />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:src="@drawable/icon"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:hint="Inserisci il nome"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:id="@+id/editextProfName" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:hint="Inserisci il cognome"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:id="@+id/editextProfSurname" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:hint="Indica il sesso"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:id="@+id/textViewProfGender" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:hint="Inserisci il comune di nascita"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:id="@+id/editextProfComune" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:hint="Inserisci la data di nascita"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="18sp"
+                    android:id="@+id/textViewProfBirthDate" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:hint="Inserisci l'indirizzo di residenza"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:id="@+id/editextProfAddress" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Codice Fiscale Placeholder"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:id="@+id/textViewProfFiscalCode" />
+                <Button
+                    android:layout_width="match_parent"
+                    android:text="Modifica"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@android:color/background_light"
+                    android:background="@color/colorBackgroundFloatingDark"
+                    android:id="@+id/buttonProfUpdate" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+</FrameLayout>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/teal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tealPrimary">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="Registrati su FarmaLista"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:layout_marginTop="50dp"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@android:color/background_light"
+                android:textSize="20sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_marginTop="50dp"
+                android:id="@+id/editTextRegEmail"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:hint="Inserisci l'email"
+                android:inputType="textEmailAddress"
+                android:textSize="24sp"
+                android:textColor="@color/teal"
+                android:gravity="center_vertical|center_horizontal"
+                android:background="@android:color/background_light"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:layout_below="@+id/editTextRegEmail"
+                android:layout_alignStart="@+id/editTextRegEmail"
+                android:layout_marginTop="15dp"
+                android:id="@+id/editTextRegPass"
+                android:hint="Password"
+                android:textSize="24sp"
+                android:textColor="@color/tealPrimary"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@android:color/background_light"
+                android:gravity="center_vertical|center_horizontal" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:layout_below="@+id/editTextRegPass"
+                android:layout_alignStart="@+id/editTextRegPass"
+                android:id="@+id/editTextRegConfPass"
+                android:hint="Conferma password"
+                android:textSize="24sp"
+                android:textColor="@color/tealPrimary"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="15dp"
+                android:background="@android:color/background_light"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" />
+
+            <Button
+                android:text="Registrati"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/buttonRegReg"
+                android:background="@color/colorBackgroundFloatingDark"
+                android:textColor="@android:color/background_light" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    </ScrollView>
+</FrameLayout>
